@@ -48,17 +48,19 @@ public class StorageUtil {
   /**
    * Convert object into byte array in Big Endian
    * 
-   * @param value int
+   * @param value Object
    * @return byte[]
    * @throws IOException
    */
   public static byte[] convertObjectToByteArray(Object value) throws IOException {
-    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-    ObjectOutputStream objStream = new ObjectOutputStream(byteStream);
-    objStream.writeObject(value);
-    objStream.flush();
-    objStream.close();
-    return byteStream.toByteArray();
+    try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        ObjectOutputStream objStream = new ObjectOutputStream(byteStream);) {
+      objStream.writeObject(value);
+      objStream.flush();
+      return byteStream.toByteArray();
+    } catch (IOException e) {
+      throw e;
+    }
   }
 
   /**
